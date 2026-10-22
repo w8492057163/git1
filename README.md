@@ -1,15 +1,31 @@
 # git
 
-Placeholder repository.
+一个用来**学习 Git 版本控制**的练习仓库。
 
-This repository was initialized locally and pushed to GitHub.
+仓库由本地初始化并推送到 GitHub，内容是一份自学指南和练习场地。
 
-## Contents
+## 从这里开始
 
-Add your files here, then:
+- 📘 [GIT-学习指南.md](GIT-学习指南.md) —— 核心概念、日常操作、撤销技巧、分支，以及 10 个可反复练的练习
+- ✍️ [练习记录.md](练习记录.md) —— 每完成一个练习在这里记一行，顺便练习提交
+
+## 快速开始
 
 ```bash
-git add .
-git commit -m "your message"
-git push
+git status      # 看当前改了什么
+git add .       # 放进暂存区
+git commit -m "描述改动"   # 提交
+git push        # 同步到 GitHub
 ```
+
+## 环境
+
+| 项目 | 值 |
+|---|---|
+| 远程仓库 | https://github.com/w8492057163/git1.git |
+| 默认分支 | `main` |
+| 忽略规则 | 见 [.gitignore](.gitignore)（已排除 `.env`） |
+
+## 说明
+
+这个仓库的定位是「练习场」，所以历史里出现试探性的提交是正常的 —— 随便试，`git reflog` 能兜住。
