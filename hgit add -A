@@ -1,0 +1,90 @@
+warning: in the working copy of '练习记录.md', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/练习记录.md b/练习记录.md[m
+[1mindex 197bd83..4312412 100644[m
+[1m--- a/练习记录.md[m
+[1m+++ b/练习记录.md[m
+[36m@@ -1,13 +1,80 @@[m
+ # 练习记录[m
+ [m
+[31m-在这里记录你做的 Git 练习。每次练习改一行、提交一次，正好把日常流程练熟。[m
+[32m+[m[32m记录每次 Git 练习。每次改动一次、提交一次，正好把日常流程练熟。[m
+ [m
+ | # | 日期 | 做了什么 | 学到的 |[m
+ |---|---|---|---|[m
+[31m-| 1 | | 1 | 2026-10-22 | 完成第一次提交 | 终于搞懂工作区和暂存区的区别 |[m
+[32m+[m[32m| 1 | 2026-10-22 | 完成第一次提交 `a0f74cb` | 搞懂工作区和暂存区的区别 |[m
+[32m+[m[32m| 2 | 2026-10-25 | 新建 `notes.txt` 并提交推送 `3cd2abf` | 从 `git status` 的三种颜色看懂文件状态 |[m
+[32m+[m[32m| 3 | 2026-10-25 | 把 `notes.txt` 从 UTF-16 改成 UTF-8 `d677ec1` | Git 靠「有没有 0x00 字节」判断文本还是二进制 |[m
+[32m+[m[32m| 4 | 2026-10-25 | 整理练习记录，固化踩坑经验 | 记录本身就是最好的复习 |[m
+ [m
+ ---[m
+ [m
+[31m-## 我的草稿区[m
+[32m+[m[32m## 踩过的坑（值得记住）[m
+ [m
+[31m-随便在这里写点东西，用来练习 `git status`、`git diff`、`git restore`。[m
+[32m+[m[32m### 1. Windows PowerShell 5.1 的 `>` 会写出 UTF-16[m
+[32m+[m
+[32m+[m[32m```powershell[m
+[32m+[m[32mecho "内容" > notes.txt      # ❌ 写成 UTF-16LE，含 0x00 字节[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m后果：Git 把文件当成**二进制**，`git diff` 只显示 `Binary files differ`，[m
+[32m+[m[32m`git log --stat` 显示 `Bin 0 -> 44 bytes`，行了数永远是 0。[m
+[32m+[m
+[32m+[m[32m**怎么发现**：提交输出里出现 `1 file changed, 0 insertions(+), 0 deletions(-)`，[m
+[32m+[m[32m但文件明明有内容 —— 这就是编码问题的信号。[m
+[32m+[m
+[32m+[m[32m**正确做法**：[m
+[32m+[m
+[32m+[m[32m- 用 VS Code 编辑保存（默认写无 BOM 的 UTF-8，最省心）[m
+[32m+[m[32m- 或在 PowerShell 里显式指定：`Set-Content notes.txt -Value "内容" -Encoding UTF8`[m
+[32m+[m
+[32m+[m[32m### 2. `not a git repository` = 当前目录不对[m
+[32m+[m
+[32m+[m[32mGit 只认「当前目录」和它的父目录，不会全盘搜索仓库。[m
+[32m+[m
+[32m+[m[32m```powershell[m
+[32m+[m[32mcd C:\Users\l\Desktop\git    # 先进入仓库再敲命令[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m最省心的办法：用 VS Code 的集成终端（`` Ctrl+` ``），它自动位于打开的项目目录。[m
+[32m+[m
+[32m+[m[32m### 3. `Bin a -> b` 也可能是「旧版本」造成的[m
+[32m+[m
+[32m+[m[32mGit 判断二进制是**成对比较**的：只要新旧任一版本是二进制，整次差异就按二进制处理。[m
+[32m+[m[32m所以编码修好之后，和旧版本相比仍然显示 `Bin`，那是正常的。[m
+[32m+[m
+[32m+[m[32m单独验证某个版本是不是纯文本：[m
+[32m+[m
+[32m+[m[32m```powershell[m
+[32m+[m[32mgit diff --numstat 4b825dc642cb6eb9a060e54bf8d69288fbee4904 HEAD -- notes.txt[m
+[32m+[m[32m# 输出 "1  0  notes.txt" = 1 行新增、0 行删除 = 文本文件[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m（那串长 hash 是 Git 的「空树」，可以理解为「和一个空目录比」。）[m
+[32m+[m
+[32m+[m[32m### 4. `Failed to connect to github.com:443`[m
+[32m+[m
+[32m+[m[32m国内网络下 GitHub 常见抖动，和仓库配置、账号完全无关。[m
+[32m+[m[32m**提交已经安全地在本地，不会丢**，等几十秒重试即可：[m
+[32m+[m
+[32m+[m[32m```powershell[m
+[32m+[m[32mgit push[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m---[m
+[32m+[m
+[32m+[m[32m## 命令速查（我实际用过的）[m
+[32m+[m
+[32m+[m[32m| 目的 | 命令 |[m
+[32m+[m[32m|---|---|[m
+[32m+[m[32m| 看状态 | `git status` |[m
+[32m+[m[32m| 看历史（带分支图） | `git log --oneline --graph --all --decorate` |[m
+[32m+[m[32m| 暂存 | `git add <文件>` |[m
+[32m+[m[32m| 提交 | `git commit -m "说明"` |[m
+[32m+[m[32m| 推送 | `git push` |[m
+[32m+[m[32m| 看未暂存的改动 | `git diff` |[m
+[32m+[m[32m| 看已暂存的改动 | `git diff --staged` |[m
+[32m+[m[32m| 撤销工作区改动 | `git restore <文件>` |[m
+[32m+[m[32m| 取回远端最新 | `git pull` |[m
