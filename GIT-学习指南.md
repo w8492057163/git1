@@ -4,7 +4,7 @@
 
 所有练习都可以安全回退 —— 文末的「救命命令」能找回你误删的提交。
 
-> 仓库路径：`C:\Users\l\Desktop\git`
+> 仓库路径：`D:\workspace\git1`
 > 远程仓库：`https://github.com/w8492057163/git1.git`（公有）
 
 ---
